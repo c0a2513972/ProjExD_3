@@ -129,6 +129,20 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+class Explosion:
+    """
+    爆発エフェクトを表示するクラス
+    """
+    def __init__(self, xy: tuple[int, int]):
+        self.img = pg.image.load("fig/explosion.gif")  # ★ 爆発画像
+        self.rct = self.img.get_rect()
+        self.rct.center = xy
+        self.life = 0  # 表示フレーム数
+
+    def update(self, screen: pg.Surface):
+        screen.blit(self.img, self.rct)
+        self.life += 1
+
 class Score:
     """
     打ち落とした爆弾のスコアを表示するクラス
@@ -160,6 +174,7 @@ def main():
 
     beams = []
     score = Score()
+    explosions = []   # ★ 爆発エフェクトのリスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -190,6 +205,7 @@ def main():
                 if beam is None:
                     continue
                 if beam.rct.colliderect(bomb.rct):
+                    explosions.append(Explosion(bomb.rct.center))  # ★ 爆発追加
                     bombs[i] = None
                     beams[j] = None
                     bird.change_img(6, screen)
@@ -206,6 +222,9 @@ def main():
             beam.update(screen)
         for bomb in bombs:
             bomb.update(screen)
+        for ex in explosions:
+            ex.update(screen)
+            explosions = [ex for ex in explosions if ex.life < 10]  # ★ 10フレームだけ表示
 
         score.update(screen)
         pg.display.update()
