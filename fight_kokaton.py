@@ -5,7 +5,9 @@ import time
 import pygame as pg
 import math  
 WIDTH = 1100
+
 HEIGHT = 650
+
 NUM_OF_BOMBS = 5
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -170,7 +172,7 @@ def main():
         score.update(screen)
         pg.display.update()
         clock.tick(50)
-        
+
 if __name__ == "__main__":
     pg.init()
     main()
